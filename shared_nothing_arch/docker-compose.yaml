@@ -1,20 +1,34 @@
 version: '3.8'
 services:
+
   fe-node-1:
     user: root
     image: starrocks/allin1-ubuntu:latest
     container_name: fe-1
     hostname: StarRocks-01
+    ports:
+      - "9030:9030"
+      - "6090:6090"
     command: [ "/bin/bash", "-c",
       "
+      echo 'starting fe-leader node' && \
       /data/deploy/starrocks/fe/bin/start_fe.sh --host_type FQDN --daemon && \
-      sleep 15s && \
-      mysql -h StarRocks-01 -P 9030 -u root < /data/init/init.sql && \
+
+      sleep 20 && \
+      echo 'running nodes queries' && \
+      mysql -h StarRocks-01 -P 9030 -u root < /data/init/init-nodes.sql >> /data/deploy/errors.txt 2>&1 || true && \
+
+      sleep 20 && \
+      echo 'running tables queries' && \
+      mysql -h StarRocks-01 -P 9030 -u root < /data/init/init-tables.sql >> /data/deploy/errors.txt 2>&1 || true && \
+
+      echo 'reading logs now' && \
       tail -f /data/deploy/starrocks/fe/log/fe.log" ]
     volumes:
       - ./volumes/fe/fe-conf:/data/deploy/starrocks/fe/conf
-      - ./volumes/fe/init.sql:/data/init/init.sql
-    #      - ./volumes/fe/fe-meta:/data/deploy/starrocks/fe/meta
+      - ./volumes/fe/init-nodes.sql:/data/init/init-nodes.sql
+      - ./volumes/fe/init-tables.sql:/data/init/init-tables.sql
+      - ./volumes/fe/fe-meta:/data/deploy/starrocks/fe/meta
     environment:
       - FE_TYPE=LEADER
     networks:
@@ -22,9 +36,9 @@ services:
 
 
   fe-node-2:
+    user: root
     depends_on:
       - fe-node-1
-    user: root
     image: starrocks/allin1-ubuntu:latest
     container_name: fe-2
     hostname: StarRocks-02
@@ -36,7 +50,7 @@ services:
       tail -f /data/deploy/starrocks/fe/log/fe.log" ]
     volumes:
       - ./volumes/fe-2/fe-conf:/data/deploy/starrocks/fe/conf
-    #      - ./volumes/fe-2/fe-meta:/data/deploy/starrocks/fe/meta
+      - ./volumes/fe-2/fe-meta:/data/deploy/starrocks/fe/meta
     environment:
       - FE_TYPE=FOLLOWER
     networks:
@@ -55,9 +69,29 @@ services:
       tail -f /data/deploy/starrocks/be/log/*" ]
     volumes:
       - ./volumes/be/be-conf:/data/deploy/starrocks/be/conf
+      - ./volumes/be/data-1:/data/deploy/starrocks/be/storage
     networks:
       - starrocks-network
+
+
+  be-node-2:
+    user: root
+    image: starrocks/allin1-ubuntu:latest
+    container_name: be-2
+    hostname: StarRocks-04
+    command: [ "/bin/bash", "-c",
+      "
+    /data/deploy/starrocks/be/bin/start_be.sh --daemon && \
+    sleep 5s && \
+    tail -f /data/deploy/starrocks/be/log/*" ]
+    volumes:
+      - ./volumes/be/be-conf:/data/deploy/starrocks/be/conf
+      - ./volumes/be/data-2:/data/deploy/starrocks/be/storage
+    networks:
+      - starrocks-network
+
 
 networks:
   starrocks-network:
     driver: bridge
+

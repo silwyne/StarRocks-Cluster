@@ -4,7 +4,9 @@ services:
     user: root
     image: allin1-ubuntu:latest
     container_name: starrocks-alone
-    hostname: StarRocks-01
+    hostname: StarRocks-alone-01
+    ports:
+      - "9030:9030"
     volumes:
       - ./volumes/fe/init.sql:/data/init/init.sql
       - ./volumes/fe/fe-meta:/data/deploy/starrocks/fe/meta
