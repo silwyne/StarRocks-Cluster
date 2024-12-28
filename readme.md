@@ -6,6 +6,10 @@ Welcome to the repository! This project is designed to share knowledge on how to
 
 Currently, this repository demonstrates the setup of a **Shared-Nothing Architecture** StarRocks cluster using Docker Compose. The **Shared-Data Architecture** is planned and will be added in the future.
 
+
+![starrocks pic](static/starrocks-pic.png)
+
+
 ## Features
 
 - **Docker Compose Configurations**:
