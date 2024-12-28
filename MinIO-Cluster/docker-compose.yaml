@@ -1,0 +1,55 @@
+version: '3.8'
+services:
+  minio1:
+    image: minio/minio
+    container_name: minio1
+    environment:
+      MINIO_ROOT_USER: "admin"
+      MINIO_ROOT_PASSWORD: "admin123"
+    volumes:
+      - ./minio/data1:/data
+    command: server http://minio1/data http://minio2/data http://minio3/data http://minio4/data
+    ports:
+      - "9001:9000"
+    networks:
+      - minio-cluster
+
+  minio2:
+    image: minio/minio
+    container_name: minio2
+    environment:
+      MINIO_ROOT_USER: "admin"
+      MINIO_ROOT_PASSWORD: "admin123"
+    volumes:
+      - ./minio/data2:/data
+    command: server http://minio1/data http://minio2/data http://minio3/data http://minio4/data
+    networks:
+      - minio-cluster
+
+  minio3:
+    image: minio/minio
+    container_name: minio3
+    environment:
+      MINIO_ROOT_USER: "admin"
+      MINIO_ROOT_PASSWORD: "admin123"
+    volumes:
+      - ./minio/data3:/data
+    command: server http://minio1/data http://minio2/data http://minio3/data http://minio4/data
+    networks:
+      - minio-cluster
+
+  minio4:
+    image: minio/minio
+    container_name: minio4
+    environment:
+      MINIO_ROOT_USER: "admin"
+      MINIO_ROOT_PASSWORD: "admin123"
+    volumes:
+      - ./minio/data4:/data
+    command: server http://minio1/data http://minio2/data http://minio3/data http://minio4/data
+    networks:
+      - minio-cluster
+
+networks:
+  minio-cluster:
+    driver: bridge
