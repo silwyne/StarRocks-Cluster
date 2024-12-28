@@ -1,0 +1,63 @@
+version: '3.8'
+services:
+  fe-node-1:
+    user: root
+    image: starrocks/allin1-ubuntu:latest
+    container_name: fe-1
+    hostname: StarRocks-01
+    command: [ "/bin/bash", "-c",
+      "
+      /data/deploy/starrocks/fe/bin/start_fe.sh --host_type FQDN --daemon && \
+      sleep 15s && \
+      mysql -h StarRocks-01 -P 9030 -u root < /data/init/init.sql && \
+      tail -f /data/deploy/starrocks/fe/log/fe.log" ]
+    volumes:
+      - ./volumes/fe/fe-conf:/data/deploy/starrocks/fe/conf
+      - ./volumes/fe/init.sql:/data/init/init.sql
+    #      - ./volumes/fe/fe-meta:/data/deploy/starrocks/fe/meta
+    environment:
+      - FE_TYPE=LEADER
+    networks:
+      - starrocks-network
+
+
+  fe-node-2:
+    depends_on:
+      - fe-node-1
+    user: root
+    image: starrocks/allin1-ubuntu:latest
+    container_name: fe-2
+    hostname: StarRocks-02
+    command: [ "/bin/bash", "-c",
+      "
+      sleep 20s && \
+      /data/deploy/starrocks/fe/bin/start_fe.sh --host_type FQDN --helper StarRocks-01:9010 --daemon && \
+      sleep 5s && \
+      tail -f /data/deploy/starrocks/fe/log/fe.log" ]
+    volumes:
+      - ./volumes/fe-2/fe-conf:/data/deploy/starrocks/fe/conf
+    #      - ./volumes/fe-2/fe-meta:/data/deploy/starrocks/fe/meta
+    environment:
+      - FE_TYPE=FOLLOWER
+    networks:
+      - starrocks-network
+
+
+  be-node:
+    user: root
+    image: starrocks/allin1-ubuntu:latest
+    container_name: be
+    hostname: StarRocks-03
+    command: [ "/bin/bash", "-c",
+      "
+      /data/deploy/starrocks/be/bin/start_be.sh --daemon && \
+      sleep 5s && \
+      tail -f /data/deploy/starrocks/be/log/*" ]
+    volumes:
+      - ./volumes/be/be-conf:/data/deploy/starrocks/be/conf
+    networks:
+      - starrocks-network
+
+networks:
+  starrocks-network:
+    driver: bridge
