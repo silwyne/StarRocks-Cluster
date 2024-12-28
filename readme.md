@@ -1,5 +1,7 @@
 # StarRocks Cluster Setup on Docker
 
+[Repo state : In Progress]
+
 Welcome to the repository! This project is designed to share knowledge on how to set up a StarRocks Cluster using Docker. The goal is to simplify the process of deploying StarRocks and to provide working examples for enthusiasts and professionals alike.
 
 ## About the Project
@@ -52,8 +54,8 @@ Currently, this repository demonstrates the setup of a **Shared-Nothing Architec
    ```
 
 4.
-> [!TIP] \
-> for more information of how we introduce nodes to fe-leader node (for setting up the cluster) : \
+> [!TIPS] \
+> For more information of how we introduce nodes to fe-leader node (for setting up the cluster) : \
 > **Add Backend Nodes** (if required): \
 > We execute the following SQL command to add backend nodes to the cluster:
 > ```sql
@@ -95,5 +97,3 @@ Currently, this repository demonstrates the setup of a **Shared-Nothing Architec
 
 For any questions or feedback, please reach out to:
 - **SMHT**: scaleenor@gmail.com
-- [GitHub](https://github.com/Silwyne)
-
