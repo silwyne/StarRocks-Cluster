@@ -13,7 +13,9 @@ This project sets up a **MinIO distributed cluster** using Docker Compose. MinIO
 ## Setup Instructions
 
 ### 0. Install Docker on your machine
->[!NOTE] clustering is easier on docker bro
+
+>[!NOTE]\
+> clustering is easier on docker bro
 
 ### 1. Clone the repository
 Clone this repository or create a new directory for your MinIO setup:
