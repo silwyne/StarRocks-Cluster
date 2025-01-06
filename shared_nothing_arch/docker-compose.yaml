@@ -1,6 +1,5 @@
 version: '3.8'
 services:
-
   fe-node-1:
     user: root
     image: starrocks/allin1-ubuntu:latest

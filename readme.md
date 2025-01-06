@@ -54,19 +54,19 @@ Currently, this repository demonstrates the setup of a **Shared-Nothing Architec
    ```
 
 4.
-> [!TIPS] \
+>[!TIP] \
 > For more information of how we introduce nodes to fe-leader node (for setting up the cluster) : \
 > **Add Backend Nodes** (if required): \
-> We execute the following SQL command to add backend nodes to the cluster:
-> ```sql
-> ALTER SYSTEM ADD BACKEND "StarRocks-03:9050";
-> ```
->
+> We execute the following SQL command to add backend nodes to the cluster:\
+```sql
+ALTER SYSTEM ADD BACKEND "StarRocks-03:9050";
+```
+>[!TIP]\
 > **Add Follower Nodes** (if required):\
 > We execute the following SQL command to add follower nodes to the cluster:\
-> ```sql
-> ALTER SYSTEM ADD FOLLOWER "StarRocks-02:9010";
-> ```
+```sql
+ALTER SYSTEM ADD FOLLOWER "StarRocks-02:9010";
+```
 
 
 

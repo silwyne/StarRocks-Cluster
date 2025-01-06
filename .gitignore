@@ -1,6 +1,6 @@
 MinIO-Cluster/minio/*
 starrocks.tar
-shared_nothing_arch/volumes/be/volumes/be/data-1
-shared_nothing_arch/volumes/be/volumes/be/data-2
-shared_nothing_arch/volumes/fe-2/fe-meta
-shared_nothing_arch/volumes/fe/fe-meta
+*/volumes/be/volumes/be/data-1
+*/volumes/be/volumes/be/data-2
+*/volumes/fe-2/fe-meta
+*/volumes/fe/fe-met
