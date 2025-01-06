@@ -53,7 +53,7 @@ Currently, this repository demonstrates the setup of a **Shared-Nothing Architec
    mysql -h 127.0.0.1 -P 9030 -u root
    ```
 
->[!TIP] \
+>[!TIP]\
 > For more information of how we introduce nodes to fe-leader node (for setting up the cluster) : \
 > **Add Backend Nodes** (if required): \
 > We execute the following SQL command to add backend nodes to the cluster:\
