@@ -2,7 +2,7 @@ version: '3.8'
 services:
   starrocks-alone:
     user: root
-    image: allin1-ubuntu:latest
+    image: starrocks/allin1-ubuntu:3.3.9
     container_name: starrocks-alone
     hostname: StarRocks-alone-01
     ports:

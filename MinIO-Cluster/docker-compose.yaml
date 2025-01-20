@@ -2,10 +2,12 @@ version: '3.8'
 services:
   minio1:
     image: minio/minio:latest
+    hostname: minio1
     volumes:
       - ./minio/data1:/data
     ports:
       - "9000:9000"
+      - "6090:6090"
       - "9001:9001"
     env_file:
       - minio_env
@@ -15,6 +17,7 @@ services:
 
   minio2:
     image: minio/minio:latest
+    hostname: minio2
     volumes:
       - ./minio/data2:/data
     ports:
@@ -27,6 +30,7 @@ services:
 
   minio3:
     image: minio/minio:latest
+    hostname: minio3
     volumes:
       - ./minio/data3:/data
     ports:
@@ -39,6 +43,7 @@ services:
 
   minio4:
     image: minio/minio:latest
+    hostname: minio4
     volumes:
       - ./minio/data4:/data
     ports:

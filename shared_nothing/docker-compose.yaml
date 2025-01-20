@@ -2,7 +2,7 @@ version: '3.8'
 services:
   fe-node-1:
     user: root
-    image: starrocks/allin1-ubuntu:latest
+    image: starrocks/allin1-ubuntu:3.3.9
     container_name: fe-1
     hostname: StarRocks-01
     ports:
@@ -23,10 +23,14 @@ services:
 
       echo 'reading logs now' && \
       tail -f /data/deploy/starrocks/fe/log/fe.log" ]
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
     volumes:
       - ./volumes/fe/fe-conf:/data/deploy/starrocks/fe/conf
-      - ./volumes/fe/init-nodes.sql:/data/init/init-nodes.sql
-      - ./volumes/fe/init-tables.sql:/data/init/init-tables.sql
+      - ./init-sqls:/data/init
       - ./volumes/fe/fe-meta:/data/deploy/starrocks/fe/meta
     environment:
       - FE_TYPE=LEADER
@@ -38,7 +42,7 @@ services:
     user: root
     depends_on:
       - fe-node-1
-    image: starrocks/allin1-ubuntu:latest
+    image: starrocks/allin1-ubuntu:3.3.9
     container_name: fe-2
     hostname: StarRocks-02
     command: [ "/bin/bash", "-c",
@@ -47,6 +51,11 @@ services:
       /data/deploy/starrocks/fe/bin/start_fe.sh --host_type FQDN --helper StarRocks-01:9010 --daemon && \
       sleep 5s && \
       tail -f /data/deploy/starrocks/fe/log/fe.log" ]
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
     volumes:
       - ./volumes/fe-2/fe-conf:/data/deploy/starrocks/fe/conf
       - ./volumes/fe-2/fe-meta:/data/deploy/starrocks/fe/meta
@@ -58,7 +67,7 @@ services:
 
   be-node:
     user: root
-    image: starrocks/allin1-ubuntu:latest
+    image: starrocks/allin1-ubuntu:3.3.9
     container_name: be
     hostname: StarRocks-03
     command: [ "/bin/bash", "-c",
@@ -66,6 +75,11 @@ services:
       /data/deploy/starrocks/be/bin/start_be.sh --daemon && \
       sleep 5s && \
       tail -f /data/deploy/starrocks/be/log/*" ]
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
     volumes:
       - ./volumes/be/be-conf:/data/deploy/starrocks/be/conf
       - ./volumes/be/data-1:/data/deploy/starrocks/be/storage
@@ -75,7 +89,7 @@ services:
 
   be-node-2:
     user: root
-    image: starrocks/allin1-ubuntu:latest
+    image: starrocks/allin1-ubuntu:3.3.9
     container_name: be-2
     hostname: StarRocks-04
     command: [ "/bin/bash", "-c",
@@ -83,6 +97,11 @@ services:
     /data/deploy/starrocks/be/bin/start_be.sh --daemon && \
     sleep 5s && \
     tail -f /data/deploy/starrocks/be/log/*" ]
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
     volumes:
       - ./volumes/be/be-conf:/data/deploy/starrocks/be/conf
       - ./volumes/be/data-2:/data/deploy/starrocks/be/storage
@@ -93,4 +112,3 @@ services:
 networks:
   starrocks-network:
     driver: bridge
-

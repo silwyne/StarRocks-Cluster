@@ -1,0 +1,51 @@
+version: '3.8'
+services:
+  fe:
+    user: root
+    image: starrocks/allin1-ubuntu:3.3.9
+    container_name: fe
+    hostname: StarRocks-01
+    ports:
+      - "9030:9030"
+    command: [ "/bin/bash", "-c",
+      "
+      echo 'starting fe-leader node' && \
+      /data/deploy/starrocks/fe/bin/start_fe.sh --host_type FQDN --daemon && \
+
+      sleep 20 && \
+      echo 'running nodes queries' && \
+      mysql -h StarRocks-01 -P 9030 -u root < /data/init/init-nodes.sql >> /data/deploy/errors.txt 2>&1 || true && \
+
+      sleep 20 && \
+      echo 'running tables queries' && \
+      mysql -h StarRocks-01 -P 9030 -u root < /data/init/init-tables.sql >> /data/deploy/errors.txt 2>&1 || true && \
+
+      echo 'reading logs now' && \
+      tail -f /data/deploy/starrocks/fe/log/*" ]
+    volumes:
+      - ./init-sqls:/data/init
+      - ./volume/fe/fe-conf:/data/deploy/starrocks/fe/conf
+    environment:
+      - FE_TYPE=LEADER
+    networks:
+      - starrocks-network
+
+  cn:
+    user: root
+    image: starrocks/allin1-ubuntu:3.3.9
+    container_name: cn
+    hostname: StarRocks-02
+    command: [ "/bin/bash", "-c",
+      "
+      /data/deploy/starrocks/be/bin/start_cn.sh --daemon && \
+      sleep 5s && \
+      tail -f /data/deploy/starrocks/be/log/*"
+    ]
+    volumes:
+      - ./volume/cn/be-conf:/data/deploy/starrocks/be/conf
+    networks:
+      - starrocks-network
+
+networks:
+  starrocks-network:
+    driver: bridge
