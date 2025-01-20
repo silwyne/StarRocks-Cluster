@@ -13,7 +13,7 @@ CREATE USER IF NOT EXISTS ${creating_user_name} IDENTIFIED BY ${creating_user_pa
 -- creating storage volume
 CREATE STORAGE VOLUME some_volume
 TYPE = S3
-LOCATIONS = ("s3://bucket/test-dir")
+LOCATIONS = ("s3://bucket-1/test-dir")
 PROPERTIES
 (
     "enabled" = "true",
